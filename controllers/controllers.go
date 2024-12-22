@@ -1,14 +1,23 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+)
 
 type BaseController struct {
-    route *gin.RouterGroup
+    Route *gin.RouterGroup
+	DB *gorm.DB
+}
+
+//set db
+func (c *BaseController) SetDB(db *gorm.DB) {	
+	c.DB = db
 }
 
 func NewBaseController(route *gin.RouterGroup) *BaseController {
     return &BaseController{
-        route: route,
+        Route: route,
     }
 }
 
@@ -25,11 +34,11 @@ func NewCategoryController(route *gin.RouterGroup) *CategoryController {
 }
 
 func (c *CategoryController) setup(){
-	c.route.GET("/", c.getAll)
-	c.route.GET("/:id", c.getOne)
-	c.route.POST("/", c.create)
-	c.route.PUT("/:id", c.update)
-	c.route.DELETE("/:id", c.delete)
+	c.Route.GET("/", c.getAll)
+	c.Route.GET("/:id", c.getOne)
+	c.Route.POST("/", c.create)
+	c.Route.PUT("/:id", c.update)
+	c.Route.DELETE("/:id", c.delete)
 }
 
 func (c *CategoryController) getAll(ctx *gin.Context) {
