@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/md-shadhin-mia/echo-inventory/controllers"
+	"github.com/md-shadhin-mia/echo-inventory/initialize"
 	"github.com/md-shadhin-mia/echo-inventory/models"
 )
 
@@ -21,8 +21,6 @@ type User struct {
 	Age  int    `json:"age"`
 }
 
-var DB *gorm.DB
-
 func main() {
 	// Connect to SQLite database
 	// db := initialize.DB
@@ -32,12 +30,7 @@ func main() {
 	//if args have --migrate then automgrate
 
 	if len(os.Args) > 1 && os.Args[1] == "--migrate" {
-		db, err = gorm.Open("sqlite3", "./db.sqlite")
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		defer db.Close()
+		db = initialize.DB
 		db.AutoMigrate(&models.Category{}, &models.ProductType{})
 		return
 	}
