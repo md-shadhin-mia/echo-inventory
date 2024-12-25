@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +13,6 @@ import (
 )
 
 var db *gorm.DB
-var err error
 
 // Define the model
 type User struct {
@@ -24,23 +24,32 @@ type User struct {
 func main() {
 	// Connect to SQLite database
 	// db := initialize.DB
-
+	log.Println(" Starting server on port 8080")
 	// Automatically migrate the schema (create tables)
 	// db.AutoMigrate(&User{})
 	//if args have --migrate then automgrate
-
-	if len(os.Args) > 1 && os.Args[1] == "--migrate" {
-		db = initialize.DB
-		db.AutoMigrate(&models.Category{}, &models.ProductType{})
-		return
+	for _, arg := range os.Args {
+		if arg == "--migrate" {
+			db = initialize.DB
+			db.AutoMigrate(&models.Category{}, &models.ProductType{})
+			log.Println(" Migrated successfully")
+		}
 	}
-
+	defer initialize.DB.Close()
 	// Set up Gin router
 	r := gin.Default()
-
+	r.GET("/heath", health)
+	//controllers
 	controllers.NewCategoryController(r.Group("categories"))
 	controllers.NewProductTypeController(r.Group("product-types"))
 
 	// Run the server
 	r.Run(":8080")
+}
+
+func health(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"message": "Application is running",
+		"status":  "OK",
+	})
 }
