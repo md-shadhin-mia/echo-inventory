@@ -40,8 +40,9 @@ func main() {
 	r := gin.Default()
 	r.GET("/heath", health)
 	//controllers
-	controllers.NewCategoryController(r.Group("categories"))
+	controllers.NewCategoriesController(r.Group("categories"))
 	controllers.NewProductTypeController(r.Group("product-types"))
+	
 
 	// Run the server
 	r.Run(":8080")

@@ -10,12 +10,13 @@ type Category struct{
 	BaseModel
 	Name string 
 }
-type ProductType struct{	
+
+type ProductType struct{
 	BaseModel
 	Name string
 }
 
-type Product struct{	
+type Product struct{
 	BaseModel
 	Name string
 	CategoryID uint
